@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Consolidado de Laboratorio</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de color y fuente Inter -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#4C51BF', // Indigo oscuro (Profesional)
+                        'secondary': '#E0E7FF', // Light Indigo (Fondo suave)
+                        'accent': '#F6AD55', // Naranja (Énfasis)
+                        'success': '#10B981', // Verde (Éxito)
+                        'danger': '#EF4444', // Rojo (Problema)
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .step-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(76, 81, 191, 0.2);
+        }
+        .section-title {
+            color: #4C51BF;
+            border-bottom: 4px solid #E0E7FF;
+        }
+        /* Icono de Libro (Inline SVG) */
+        .book-icon {
+            width: 32px;
+            height: 32px;
+            color: #4C51BF;
+            stroke-width: 2;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+    <div class="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
+
+        <!-- Encabezado Principal -->
+        <header class="bg-primary p-10 text-white text-center rounded-t-2xl">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-1 tracking-wider">INFORME CONSOLIDADO DIGITAL</h1>
+            <p class="text-secondary text-xl italic font-light">Optimización del Layout para Entrega Electrónica (PDF)</p>
+        </header>
+
+        <!-- Sección 1: Problema y Solución -->
+        <section class="p-6 md:p-10">
+            <h2 class="text-3xl font-bold section-title mb-8 pb-3">1. Situación Actual y Objetivo Principal</h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Problema -->
+                <div class="bg-danger/5 p-6 rounded-xl border-l-4 border-danger shadow-md flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-danger mr-4 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                    <div>
+                        <h3 class="font-bold text-2xl text-danger mb-2">PROBLEMA ACTUAL (Ineficiencia)</h3>
+                        <p class="text-gray-700 leading-relaxed">Cada examen se procesa como un documento independiente. Esto resulta en **múltiples archivos PDF** o múltiples secciones desordenadas para un mismo encuentro.</p>
+                    </div>
+                </div>
+
+                <!-- Solución -->
+                <div class="bg-success/5 p-6 rounded-xl border-l-4 border-success shadow-md flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-success mr-4 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <div>
+                        <h3 class="font-bold text-2xl text-success mb-2">OBJETIVO (Consolidación Digital)</h3>
+                        <p class="text-gray-700 leading-relaxed">Unificar todos los resultados de un mismo día en **UN SOLO DOCUMENTO PDF/Digital**, aplicando una lógica de paginación precisa para garantizar un formato limpio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Detalle Técnico Paso a Paso -->
+        <section class="p-6 md:p-10 bg-secondary/30">
+            <h2 class="text-3xl font-bold section-title mb-10 pb-3">2. Lógica de Paginación Digital Paso a Paso</h2>
+
+            <!-- Contenedor de Pasos -->
+            <div class="space-y-10">
+
+                <!-- PASO 1 & 2: Recolección y Almacenamiento -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- PASO 1 -->
+                    <div class="step-card bg-white p-6 rounded-xl">
+                        <svg class="book-icon mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h4 class="text-xl font-bold text-gray-800 border-b pb-2 mb-2">Paso 1: Recolección de Exámenes</h4>
+                        <p class="text-gray-600">El paciente se somete a las pruebas.</p>
+                        <div class="mt-3 p-3 bg-secondary rounded-lg">
+                            <span class="font-mono text-sm font-medium text-primary">Ejemplo (Ana):</span> Glucosa, Hemograma, Orina.
+                        </div>
+                    </div>
+                    <!-- PASO 2 -->
+                    <div class="step-card bg-white p-6 rounded-xl">
+                         <svg class="book-icon mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V5H6.5A2.5 2.5 0 0 0 4 7.5v12z"></path></svg>
+                        <h4 class="text-xl font-bold text-gray-800 border-b pb-2 mb-2">Paso 2: Almacenamiento (Valores Crudos)</h4>
+                        <p class="text-gray-600">Solo los **valores de resultado** se guardan en la Base de Datos (BD). Los valores de referencia se gestionan aparte.</p>
+                        <pre class="mt-3 p-3 bg-gray-100 rounded-lg text-xs overflow-x-auto text-gray-700 border border-gray-300">
+// Datos almacenados en BD:
+Glucosa: 95
+Hemoglobina: 14 g/dL
+Leucocitos (Orina): 5-8
+                        </pre>
+                    </div>
+                </div>
+
+                <!-- PASO 3: Generación de Formato Digital (CRÍTICO) -->
+                <div class="step-card bg-primary/10 p-6 rounded-xl border-2 border-primary shadow-2xl">
+                    <svg class="book-icon mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="color: #4C51BF;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <h4 class="inline text-2xl font-bold text-primary border-b pb-2 mb-2">Paso 3: Enriquecimiento Dinámico y Lógica de Paginación</h4>
+                    <p class="mt-2 text-gray-700 font-medium">Al generar el documento PDF, el sistema **consulta y agrega los valores de referencia (múltiples renglones)**, definiendo el espacio real ocupado.</p>
+                    <div class="mt-4 p-4 bg-white rounded-lg text-sm border-l-4 border-primary font-medium">
+                        <p class="font-bold text-primary mb-2">EJEMPLO DE LA ESTRUCTURA EN PDF:</p>
+                        <ul class="space-y-2">
+                             <li class="border-b pb-1">
+                                ***GLUCOSA*** <span class="text-xs text-gray-500">(Ocupa 4 unidades/renglones)</span><br>
+                                Resultado: 95 mg/dL **(Ref: 70-110 mg/dL)**
+                            </li>
+                             <li class="border-b pb-1">
+                                ***HEMOGRAMA*** <span class="text-xs text-gray-500">(Ocupa 6 unidades/renglones)</span><br>
+                                Hematocrito: 42% **(Ref: 40-50%)**<br>
+                                Hemoglobina: 14 g/dL **(Ref: 12-16 g/dL)**
+                            </li>
+                            <li>
+                                ***ORINA*** <span class="text-xs text-gray-500">(Ocupa 5 unidades/renglones)</span><br>
+                                Leucocitos: 5-8 **(Ref: 0-4)**<br>
+                                Bacterias: Escasas
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- PASO 4 & 5: Cálculo y Verificación de la Página Digital -->
+                <div class="step-card bg-accent/10 p-6 rounded-xl border-2 border-accent">
+                     <svg class="book-icon mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="color: #F6AD55;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <h4 class="inline text-2xl font-bold text-accent border-b pb-2 mb-2">Paso 4 & 5: Cálculo Crítico de Espacio (Renglones)</h4>
+                    <p class="mt-2 text-gray-700">Se suma el espacio total requerido, incluyendo el espacio adicional que ocupan las **múltiples líneas de referencia** y los separadores.</p>
+                    <div class="mt-4 p-4 bg-white rounded-lg text-base border-l-4 border-gray-400 font-mono">
+                        <p class="font-bold mb-2">CÁLCULO DE REQUERIMIENTO:</p>
+                        <ul class="space-y-1">
+                            <li>Glucosa: 4 Renglones</li>
+                            <li>Hemograma: 6 Renglones (Múltiples Refs)</li>
+                            <li>Orina: 5 Renglones</li>
+                            <li>Separadores (Entre Exámenes): 2 Renglones</li>
+                            <li class="font-bold text-lg border-t pt-2 mt-2 border-gray-300">TOTAL REQUERIDO: 17 Renglones</li>
+                        </ul>
+                        <p class="mt-4 text-lg font-extrabold text-success">VERIFICACIÓN (Página Digital Máx. 22 Renglones):</p>
+                        <p class="text-xl font-extrabold text-success">17 renglones ≤ 22 renglones → <span class="text-primary">✅ CONSOLIDADO EN 1 PÁGINA</span></p>
+                    </div>
+                    <p class="mt-3 text-sm text-gray-600 italic">**NOTA CRÍTICA:** Un cálculo incorrecto resultaría en que el informe sea cortado o en que se genere una segunda página innecesaria, perdiendo el objetivo de consolidación.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Resumen y Ventajas -->
+        <section class="p-6 md:p-10">
+            <h2 class="text-3xl font-bold section-title mb-8 pb-3">3. Beneficios de la Consolidación Digital</h2>
+
+            <div class="md:flex justify-around items-center mb-10 p-6 bg-primary/10 rounded-xl border border-primary/30">
+                <div class="text-center">
+                    <p class="text-lg font-bold text-gray-800">ANTES:</p>
+                    <p class="text-2xl text-danger font-extrabold">3 Documentos Separados</p>
+                </div>
+                <div class="hidden md:block text-5xl text-primary font-light">→</div>
+                <div class="text-center mt-4 md:mt-0">
+                    <p class="text-lg font-bold text-gray-800">AHORA:</p>
+                    <p class="text-3xl text-success font-extrabold">1 Documento PDF Unificado</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-primary mb-4">VENTAJAS CLAVE:</h3>
+            <ul class="list-none space-y-3 text-gray-700">
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 mr-3 text-success flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <div>
+                        <strong class="text-lg">Eficiencia de Archivo Digital:</strong> El paciente recibe un único PDF, simplificando el almacenamiento electrónico.
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 mr-3 text-success flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <div>
+                        <strong class="text-lg">Mejora de UX (User Experience):</strong> La lectura secuencial del informe es más profesional y clara, sin saltos de papel innecesarios.
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 mr-3 text-success flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <div>
+                        <strong class="text-lg">Control de Paginación:</strong> La lógica de conteo de renglones asegura que el layout de los exámenes (incluyendo las referencias variables) se adapte correctamente al tamaño de la página PDF.
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-100 p-4 text-center text-sm text-gray-600 rounded-b-2xl">
+            Desarrollo de Sistemas de Laboratorio &copy; 2025 - Documentación de Lógica de Negocio
+        </footer>
+
+    </div>
+</body>
+</html>
