@@ -4,351 +4,566 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informe Consolidado de Laboratorio</title>
-    <!-- Carga de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configuración de color y fuente Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary': '#4C51BF', // Indigo oscuro (Profesional)
-                        'secondary': '#E0E7FF', // Light Indigo (Fondo suave)
-                        'accent': '#F6AD55', // Naranja (Énfasis)
-                        'success': '#10B981', // Verde (Éxito)
-                        'danger': '#EF4444', // Rojo (Problema)
                     }
                 }
             }
         }
     </script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
         }
-        .step-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
-        .step-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 30px rgba(76, 81, 191, 0.2);
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
         }
-        .section-title {
-            color: #4C51BF;
-            border-bottom: 4px solid #E0E7FF;
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
         }
-        /* Icono de Libro (Inline SVG) */
-        .book-icon {
-            width: 32px;
-            height: 32px;
-            color: #4C51BF;
-            stroke-width: 2;
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
         }
-        /* Estilos generales para las tablas de datos */
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .section-card {
+            background: white;
+            padding: 3rem;
+            margin: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .problem-solution {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card-danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 4px solid #ef4444;
+            position: relative;
+        }
+
+        .card-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 4px solid #10b981;
+            position: relative;
+        }
+
+        .data-table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin: 1.5rem 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .data-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
         .data-table th {
-            @apply p-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-100;
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
+
         .data-table td {
-            @apply p-3 whitespace-nowrap text-sm text-gray-800;
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 0.875rem;
+            color: #374151;
         }
-        .data-table tr:nth-child(even) {
-            @apply bg-white;
+
+        .data-table tbody tr:hover {
+            background: #f9fafb;
         }
-        .highlight-row {
-            @apply bg-accent/20 font-bold text-gray-900;
+
+        .data-table .highlight-row {
+            background: linear-gradient(90deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+            font-weight: 600;
+        }
+
+        .flow-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            border: 2px solid #e5e7eb;
+        }
+
+        .flow-box.database {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
+
+        .flow-box.template {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        .flow-box.output {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .arrow-down {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .arrow-down svg {
+            color: #667eea;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #f59e0b;
+            margin: 1.5rem 0;
+        }
+
+        .critical-box {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ef4444;
+            margin: 1.5rem 0;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid #a78bfa;
+        }
+
+        .metric-value {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .section-card {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
         }
     </style>
 </head>
-<body class="p-4 md:p-10">
-    <div class="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
-
-        <!-- Encabezado Principal -->
-        <header class="bg-primary p-10 text-white text-center rounded-t-2xl">
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-1 tracking-wider">INFORME CONSOLIDADO DIGITAL</h1>
-            <p class="text-secondary text-xl italic font-light">Optimización del Layout para Entrega Electrónica (PDF)</p>
-        </header>
-
-        <!-- Sección 1: Problema y Solución -->
-        <section class="p-6 md:p-10">
-            <h2 class="text-3xl font-bold section-title mb-8 pb-3">1. Situación Actual y Objetivo Principal</h2>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Problema -->
-                <div class="bg-danger/5 p-6 rounded-xl border-l-4 border-danger shadow-md flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-danger mr-4 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
-                    <div>
-                        <h3 class="font-bold text-2xl text-danger mb-2">PROBLEMA ACTUAL (Ineficiencia)</h3>
-                        <p class="text-gray-700 leading-relaxed">Cada examen se procesa como un documento independiente. Esto resulta en **múltiples archivos PDF** o múltiples secciones desordenadas para un mismo encuentro.</p>
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div style="position: relative; z-index: 1; text-align: center;">
+                    <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 0.5rem 1.5rem; border-radius: 20px; margin-bottom: 1rem;">
+                        <span style="color: white; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.05em;">SISTEMA DE LABORATORIO CLÍNICO</span>
                     </div>
+                    <h1 style="font-size: 3.5rem; font-weight: 900; color: white; margin-bottom: 1rem; line-height: 1.2;">
+                        Informe Consolidado Digital
+                    </h1>
+                    <p style="font-size: 1.25rem; color: rgba(255,255,255,0.9); max-width: 700px; margin: 0 auto;">
+                        Lógica de Paginación con Referencias Dinámicas en Plantilla
+                    </p>
                 </div>
+            </div>
 
-                <!-- Solución -->
-                <div class="bg-success/5 p-6 rounded-xl border-l-4 border-success shadow-md flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-success mr-4 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <div>
-                        <h3 class="font-bold text-2xl text-success mb-2">OBJETIVO (Consolidación Digital)</h3>
-                        <p class="text-gray-700 leading-relaxed">Unificar todos los resultados de un mismo día en **UN SOLO DOCUMENTO PDF/Digital**, aplicando una lógica de paginación precisa para garantizar un formato limpio.</p>
+            <!-- Sección 1: Problema y Solución -->
+            <div class="section-card">
+                <h2 style="font-size: 2rem; font-weight: 800; color: #1f2937; margin-bottom: 1rem;">
+                    Situación Actual y Objetivo Principal
+                </h2>
+                <p style="color: #6b7280; font-size: 1.125rem; margin-bottom: 2rem;">
+                    Transformando la gestión documental del laboratorio
+                </p>
+
+                <div class="problem-solution">
+                    <div class="card-danger">
+                        <div style="width: 3rem; height: 3rem; background: rgba(239, 68, 68, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <svg style="width: 1.5rem; height: 1.5rem; color: #dc2626;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 700; color: #dc2626; margin-bottom: 1rem;">
+                            Problema Actual
+                        </h3>
+                        <p style="color: #7f1d1d; line-height: 1.6;">
+                            Cada examen genera un PDF separado, resultando en <strong>múltiples archivos desorganizados</strong> para un mismo encuentro clínico.
+                        </p>
+                    </div>
+
+                    <div class="card-success">
+                        <div style="width: 3rem; height: 3rem; background: rgba(16, 185, 129, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <svg style="width: 1.5rem; height: 1.5rem; color: #059669;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 700; color: #059669; margin-bottom: 1rem;">
+                            Solución Implementada
+                        </h3>
+                        <p style="color: #14532d; line-height: 1.6;">
+                            Consolidación de todos los resultados en <strong>un único PDF</strong> con paginación inteligente que considera el espacio de las plantillas de referencia.
+                        </p>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Sección 2: Detalle Técnico - Ejemplo Completo Avanzado -->
-        <section class="p-6 md:p-10 bg-secondary/30">
-            <h2 class="text-3xl font-bold section-title mb-10 pb-3">2. Lógica Avanzada de Paginación y Consolidación (Ejemplo Completo)</h2>
+            <!-- Sección 2: Flujo Completo -->
+            <div class="section-card" style="background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%);">
+                <h2 style="font-size: 2rem; font-weight: 800; color: #1f2937; margin-bottom: 0.5rem;">
+                    Flujo Completo del Sistema
+                </h2>
+                <p style="color: #6b7280; margin-bottom: 3rem; font-size: 1.125rem;">De la base de datos al PDF consolidado</p>
 
-            <!-- Contenedor de Pasos -->
-            <div class="space-y-10">
+                <!-- PASO 1: BASE DE DATOS -->
+                <div class="flow-box database">
+                    <div class="step-number">1</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #1e40af; margin-bottom: 1.5rem;">
+                        📊 DATOS EN BASE DE DATOS (Solo datos del paciente)
+                    </h3>
 
-                <!-- GRUPO 1: CONFIGURACIÓN Y DATOS RAW -->
-                <div class="step-card bg-white p-6 rounded-xl shadow-2xl border-2 border-primary/50 space-y-8">
-                    <h3 class="text-2xl font-bold text-primary border-b pb-2 mb-4">A. Configuración de Datos Base (BD)</h3>
-
-                    <!-- 1. TABLA MAESTRA DE EXÁMENES (CONFIGURACIÓN) -->
-                    <div class="overflow-x-auto">
-                        <h4 class="font-bold text-lg mb-2 text-gray-700">1. TABLA MAESTRA DE EXÁMENES (CONFIGURACIÓN)</h4>
-                        <table class="data-table w-full border-collapse border border-gray-200 rounded-lg">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>NOMBRE_EXAMEN</th>
-                                    <th>LINEAS_OCUPA</th>
-                                    <th>CAMPOS_PACIENTE</th>
-                                    <th>CAMPOS_REFERENCIA</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="bg-white">
-                                    <td>1</td>
-                                    <td>GLUCOSA</td>
-                                    <td>4</td>
-                                    <td>valor, unidad</td>
-                                    <td>"70-110 mg/dL"</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>HEMOGRAMA</td>
-                                    <td>8</td>
-                                    <td>hematocrito, hemoglobina, leucocitos</td>
-                                    <td>"Hto: 40-50%, Hb: 12-16 g/dL, Leuc: 4,000-11,000"</td>
-                                </tr>
-                                <tr class="bg-white">
-                                    <td>3</td>
-                                    <td>UROCULTIVO</td>
-                                    <td>25</td>
-                                    <td>leucocitos_campo, hematias_campo, bacterias, microorganismo</td>
-                                    <td>"Leuc: 0-4/campo, Hemat: 0-3/campo"</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p class="mt-2 text-sm text-gray-600 italic">**Nota:** El campo <strong class="text-primary">LINEAS_OCUPA</strong> incluye el título del examen, las líneas base del resultado y las líneas para el(los) valor(es) de referencia DINÁMICOS.</p>
-                    </div>
-
-                    <!-- 2. TABLA DE PACIENTES & 3. TABLA DE ORDENES -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- 2. PACIENTES -->
-                        <div class="overflow-x-auto">
-                            <h4 class="font-bold text-lg mb-2 text-gray-700">2. TABLA DE PACIENTES</h4>
-                            <table class="data-table w-full border-collapse border border-gray-200">
+                    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Tabla Maestra de Exámenes</h4>
+                        <div class="data-table-container">
+                            <table class="data-table">
                                 <thead>
-                                    <tr><th>ID</th><th>DNI</th><th>NOMBRE</th></tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Examen</th>
+                                        <th>Líneas Totales*</th>
+                                        <th>Campos de Datos</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td>1</td><td>76543210</td><td>Ana García López</td></tr>
+                                    <tr>
+                                        <td><span class="badge badge-primary">1</span></td>
+                                        <td><strong>GLUCOSA</strong></td>
+                                        <td>4 líneas</td>
+                                        <td>valor, unidad</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-primary">2</span></td>
+                                        <td><strong>HEMOGRAMA</strong></td>
+                                        <td>8 líneas</td>
+                                        <td>hematocrito, hemoglobina, leucocitos</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-primary">3</span></td>
+                                        <td><strong>UROCULTIVO</strong></td>
+                                        <td>25 líneas</td>
+                                        <td>leucocitos, hematías, bacterias, microorganismo</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <!-- 3. ORDENES -->
-                        <div class="overflow-x-auto">
-                            <h4 class="font-bold text-lg mb-2 text-gray-700">3. TABLA DE ÓRDENES (POR FECHA)</h4>
-                            <table class="data-table w-full border-collapse border border-gray-200">
+                        <div class="warning-box">
+                            <p style="color: #78350f; line-height: 1.6;">
+                                <strong>*Líneas Totales incluye:</strong> Título del examen + Datos del paciente + <strong>ESPACIO RESERVADO para valores de referencia</strong> (aunque NO se guardan en BD)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="background: white; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Tabla de Resultados (Solo valores del paciente)</h4>
+                        <div class="data-table-container">
+                            <table class="data-table">
                                 <thead>
-                                    <tr><th>ID</th><th>FECHA</th><th>EXÁMENES</th></tr>
+                                    <tr><th>ID</th><th>Orden</th><th>Examen</th><th>Valor 1</th><th>Valor 2</th><th>Valor 3</th></tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td>1001</td><td>2024-11-15</td><td>Glucosa, Hemograma, Urocultivo</td></tr>
+                                    <tr><td>5001</td><td>1001</td><td>GLUCOSA</td><td>95</td><td>mg/dL</td><td>—</td></tr>
+                                    <tr><td>5002</td><td>1001</td><td>HEMOGRAMA</td><td>42%</td><td>14 g/dL</td><td>6,500</td></tr>
+                                    <tr><td>5003</td><td>1001</td><td>UROCULTIVO</td><td>5-8/Campo</td><td>0-1/Campo</td><td>ESCASOS</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- 4. TABLA DE RESULTADOS (SOLO DATOS PACIENTE) -->
-                    <div class="overflow-x-auto">
-                        <h4 class="font-bold text-lg mb-2 text-gray-700">4. TABLA DE RESULTADOS (DATOS CRUDOS DEL PACIENTE)</h4>
-                        <table class="data-table w-full border-collapse border border-gray-200">
-                            <thead>
-                                <tr><th>ID_RES</th><th>ID_ORDEN</th><th>ID_EXAMEN</th><th>VALOR_1</th><th>VALOR_2</th><th>VALOR_3</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>5001</td><td>1001</td><td>1</td><td>"95"</td><td>"mg/dL"</td><td>NULL</td></tr>
-                                <tr><td>5002</td><td>1001</td><td>2</td><td>"42%"</td><td>"14 g/dL"</td><td>"6,500"</td></tr>
-                                <tr><td>5003</td><td>1001</td><td>3</td><td>"5-8/Campo"</td><td>"0-1/Campo"</td><td>"ESCASOS"</td></tr>
-                            </tbody>
-                        </table>
-                        <p class="mt-2 text-sm text-gray-600 italic">**CRÍTICO:** Los valores de referencia NO están aquí. Se añaden en el paso de generación (runtime) consultando la Tabla Maestra (1).</p>
+                    <div class="critical-box" style="margin-top: 1.5rem;">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
+                            <svg style="width: 1.5rem; height: 1.5rem; color: #dc2626; flex-shrink: 0; margin-top: 0.25rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <div>
+                                <h5 style="font-weight: 700; color: #7f1d1d; margin-bottom: 0.5rem; font-size: 1.125rem;">PUNTO CRÍTICO</h5>
+                                <p style="color: #7f1d1d; line-height: 1.7; font-weight: 500;">
+                                    Los <strong>valores de referencia NO se guardan en la base de datos</strong>. Solo se almacenan los datos del paciente (95, 42%, 6,500, etc.)
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- FLECHA -->
+                <div class="arrow-down">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
+                </div>
 
-                <!-- GRUPO 2: LÓGICA DE PAGINACIÓN Y RESULTADO -->
-                <div class="step-card bg-accent/10 p-6 rounded-xl shadow-2xl border-2 border-accent space-y-8">
-                    <h3 class="text-2xl font-bold text-accent border-b pb-2 mb-4">B. Cálculo de Paginación y Output Final (Máx. 22 líneas por hoja digital)</h3>
+                <!-- PASO 2: PLANTILLA -->
+                <div class="flow-box template">
+                    <div class="step-number" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">2</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #92400e; margin-bottom: 1.5rem;">
+                        📄 PLANTILLA DE IMPRESIÓN (Con referencias hardcodeadas)
+                    </h3>
 
-                    <!-- 5. CÁLCULO DE LÍNEAS Y HOJAS -->
-                    <div class="overflow-x-auto">
-                        <h4 class="font-bold text-lg mb-2 text-gray-700">5. CÁLCULO DE LÍNEAS Y HOJAS</h4>
-                        <table class="data-table w-full border-collapse border border-gray-200">
-                            <thead>
-                                <tr><th>ID_ORDEN</th><th>EXAMEN</th><th>LINEAS_EXAMEN</th><th>LINEAS_SEPARADOR</th><th>LINEAS_ACUMULADAS</th><th>HOJA_ASIGNADA</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>1001</td><td>Glucosa</td><td>4</td><td>1</td><td>5</td><td>1</td></tr>
-                                <tr><td>1001</td><td>Hemograma</td><td>8</td><td>1</td><td>14</td><td>1</td></tr>
-                                <tr class="highlight-row">
-                                    <td>1001</td>
-                                    <td>Urocultivo</td>
-                                    <td>25</td>
-                                    <td>1</td>
-                                    <td>37</td>
-                                    <td>2 (¡Salto!)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="mt-4 p-4 bg-white rounded-lg border-l-4 border-success">
-                            <p class="font-bold text-lg text-success">TOTAL LÍNEAS REQUERIDAS: 37</p>
-                            <p class="font-bold text-lg text-success">TOTAL HOJAS GENERADAS: 2 <span class="text-sm text-gray-600 italic">(37 líneas ÷ 22 líneas máx. por hoja = 1.68 → Se necesitan 2 hojas)</span></p>
+                    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Ejemplo: Plantilla de GLUCOSA (4 líneas)</h4>
+                        <div class="code-block">
+<span style="color: #fbbf24;">━━━ GLUCOSA ━━━</span>                           ← Línea 1: Título
+  Resultado: <span style="color: #10b981;">[VALOR_PACIENTE]</span> <span style="color: #10b981;">[UNIDAD]</span>   ← Línea 2: Dato de BD
+  <span style="color: #f97316;">Valor de Referencia: 70-110 mg/dL</span>    ← Línea 3: <strong>HARDCODEADO</strong>
+                                             ← Línea 4: Espacio
                         </div>
                     </div>
 
-                    <!-- 6. INFORME GENERADO - HOJA 1 (Extracto) -->
-                    <div class="overflow-x-auto">
-                        <h4 class="font-bold text-lg mb-2 text-gray-700">6. INFORME GENERADO - HOJA 1 (Extracto del PDF)</h4>
-                        <pre class="bg-gray-800 text-secondary p-4 rounded-lg text-sm whitespace-pre-wrap">
-<span class="text-accent/80">LABORATORIO CLÍNICO CENTRAL (Título)</span>
-<span class="text-secondary">INFORME DE RESULTADOS (Subtítulo)</span>
------------------------------------
-Paciente: Ana García López (Dato paciente)
-DNI: 76543210 - Edad: 35 años (Dato paciente)
-Fecha: 15/11/2024 (Dato paciente)
-(Líneas de cabecera y datos de paciente consumen ~8 líneas)
-
-<span class="text-accent">--- GLUCOSA ---</span> (4 líneas)
-  Resultado: 95 mg/dL (Valor paciente)
-  Valor referencia: 70-110 mg/dL (Valor referencia)
-(Consumo acumulado: ~12 líneas)
-
-<span class="text-accent">--- HEMOGRAMA ---</span> (8 líneas)
-  Hematocrito: 42% (Valor paciente)
-  Referencia: 40-50% (Valor referencia)
-  Hemoglobina: 14 g/dL (Valor paciente)
-  Referencia: 12-16 g/dL (Valor referencia)
-  Leucocitos: 6,500 (Valor paciente)
-  Referencia: 4,000-11,000 (Valor referencia)
-(Consumo acumulado: ~21 líneas. El siguiente examen fuerza salto de página.)
-
-<span class="text-danger">*** FIN DE HOJA 1 (Línea 22) ***</span>
-</pre>
+                    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Ejemplo: Plantilla de HEMOGRAMA (8 líneas)</h4>
+                        <div class="code-block">
+<span style="color: #fbbf24;">━━━ HEMOGRAMA ━━━</span>                        ← Línea 1: Título
+  Hematocrito: <span style="color: #10b981;">[VALOR_1]</span>                ← Línea 2: Dato de BD
+  <span style="color: #f97316;">Referencia: 40-50%</span>                    ← Línea 3: <strong>HARDCODEADO</strong>
+  Hemoglobina: <span style="color: #10b981;">[VALOR_2]</span>                ← Línea 4: Dato de BD
+  <span style="color: #f97316;">Referencia: 12-16 g/dL</span>                ← Línea 5: <strong>HARDCODEADO</strong>
+  Leucocitos: <span style="color: #10b981;">[VALOR_3]</span>                 ← Línea 6: Dato de BD
+  <span style="color: #f97316;">Referencia: 4,000-11,000</span>              ← Línea 7: <strong>HARDCODEADO</strong>
+                                             ← Línea 8: Espacio
+                        </div>
                     </div>
 
-                    <!-- 7. INFORME GENERADO - HOJA 2 (Extracto) -->
-                    <div class="overflow-x-auto">
-                        <h4 class="font-bold text-lg mb-2 text-gray-700">7. INFORME GENERADO - HOJA 2 (Extracto del PDF)</h4>
-                        <pre class="bg-gray-800 text-secondary p-4 rounded-lg text-sm whitespace-pre-wrap">
-<span class="text-accent/80">LABORATORIO CLÍNICO CENTRAL (Título, repite header)</span>
-<span class="text-secondary">Paciente: Ana García López (continuación) (Dato paciente)</span>
------------------------------------
-(Líneas de cabecera de la nueva página consumen ~3 líneas)
-
-<span class="text-accent">--- UROCULTIVO ---</span> (25 líneas, empieza aquí)
-  Leucocitos: 5-8/Campo (Valor paciente)
-  Referencia: 0-4/Campo (Valor referencia)
-  Hematías: 0-1/Campo (Valor paciente)
-  Referencia: 0-3/Campo (Valor referencia)
-  Bacterias: ESCASOS (Valor paciente)
-  Recuento: >100 UFC/mL (Valor paciente)
-  Microorganismo: Staphylococcus (Valor paciente)
-  Resultado: POSITIVO (Valor paciente)
-(El resto del examen UROCULTIVO y el footer de firma ocupan las líneas restantes de la Hoja 2)
-
-FIRMA: ___________________ (Firma)
-Dr. Carlos Rodríguez (Nombre médico)
-CMP: 12345 (Colegiatura)
-</pre>
-                    </div>
-
-                    <!-- 8. RESUMEN EJECUTIVO -->
-                    <div class="overflow-x-auto">
-                        <h4 class="font-bold text-lg mb-2 text-gray-700">8. RESUMEN EJECUTIVO (Eficacia de Consolidación)</h4>
-                        <table class="data-table w-full border-collapse border border-gray-200">
-                            <thead>
-                                <tr><th>CONCEPTO</th><th>VALOR</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Paciente</td><td>Ana García López</td></tr>
-                                <tr><td>Fecha</td><td>15/11/2024</td></tr>
-                                <tr class="bg-primary/10 font-semibold text-primary"><td>Total exámenes</td><td>3</td></tr>
-                                <tr class="bg-primary/10 font-semibold text-primary"><td>Total líneas ocupadas</td><td>37</td></tr>
-                                <tr class="bg-primary/10 font-semibold text-primary"><td>Total hojas generadas</td><td>2</td></tr>
-                                <tr><td>Espacio total disponible (2 hojas * 22 líneas)</td><td>44 líneas</td></tr>
-                                <tr><td>Espacio utilizado</td><td>84% (37/44 líneas)</td></tr>
-                                <tr><td>Espacio sobrante</td><td>7 líneas</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="info-box">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
+                            <svg style="width: 1.5rem; height: 1.5rem; color: #1e40af; flex-shrink: 0; margin-top: 0.25rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <div>
+                                <h5 style="font-weight: 700; color: #1e3a8a; margin-bottom: 0.5rem;">¿Por qué contar las líneas de referencia?</h5>
+                                <p style="color: #1e3a8a; line-height: 1.7;">
+                                    Las referencias ocupan <strong>ESPACIO FÍSICO en el PDF</strong>. Si no las contamos en la lógica de paginación, los exámenes se solaparían o se cortarían entre páginas.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-            </div>
-        </section>
-
-        <!-- Sección 3: Resumen y Ventajas -->
-        <section class="p-6 md:p-10">
-            <h2 class="text-3xl font-bold section-title mb-8 pb-3">3. Beneficios de la Consolidación Digital</h2>
-
-            <div class="md:flex justify-around items-center mb-10 p-6 bg-primary/10 rounded-xl border border-primary/30">
-                <div class="text-center">
-                    <p class="text-lg font-bold text-gray-800">ANTES:</p>
-                    <p class="text-2xl text-danger font-extrabold">3 Documentos Separados</p>
+                <!-- FLECHA -->
+                <div class="arrow-down">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
                 </div>
-                <div class="hidden md:block text-5xl text-primary font-light">→</div>
-                <div class="text-center mt-4 md:mt-0">
-                    <p class="text-lg font-bold text-gray-800">AHORA:</p>
-                    <p class="text-3xl text-success font-extrabold">1 Documento PDF Unificado</p>
+
+                <!-- PASO 3: CÁLCULO -->
+                <div class="flow-box" style="border-color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);">
+                    <div class="step-number" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">3</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #6b21a8; margin-bottom: 1.5rem;">
+                        🧮 CÁLCULO DE PAGINACIÓN (Máx. 22 líneas/página)
+                    </h3>
+
+                    <div style="background: white; padding: 1.5rem; border-radius: 8px;">
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>Examen</th><th>Líneas Total</th><th>Separador</th><th>Acumulado</th><th>Página</th><th>Lógica</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Glucosa</strong></td>
+                                        <td>4</td>
+                                        <td>1</td>
+                                        <td>5</td>
+                                        <td>1</td>
+                                        <td style="font-size: 0.75rem; color: #6b7280;">5 ≤ 22 ✓ Cabe</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Hemograma</strong></td>
+                                        <td>8</td>
+                                        <td>1</td>
+                                        <td>14</td>
+                                        <td>1</td>
+                                        <td style="font-size: 0.75rem; color: #6b7280;">14 ≤ 22 ✓ Cabe</td>
+                                    </tr>
+                                    <tr class="highlight-row">
+                                        <td><strong>Urocultivo</strong></td>
+                                        <td>25</td>
+                                        <td>1</td>
+                                        <td>40</td>
+                                        <td>2</td>
+                                        <td style="font-size: 0.75rem; color: #dc2626;"><strong>40 > 22 ✗ Nueva página</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 2rem;">
+                        <div class="metric-card">
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Líneas Totales</div>
+                            <div class="metric-value">37</div>
+                        </div>
+                        <div class="metric-card">
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Páginas</div>
+                            <div class="metric-value">2</div>
+                        </div>
+                        <div class="metric-card">
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Eficiencia</div>
+                            <div class="metric-value">84%</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <h3 class="text-2xl font-semibold text-primary mb-4">VENTAJAS CLAVE:</h3>
-            <ul class="list-none space-y-3 text-gray-700">
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 mr-3 text-success flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <div>
-                        <strong class="text-lg">Eficiencia de Archivo Digital:</strong> El paciente recibe un único PDF, simplificando el almacenamiento electrónico.
-                    </div>
-                </li>
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 mr-3 text-success flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <div>
-                        <strong class="text-lg">Mejora de UX (User Experience):</strong> La lectura secuencial del informe es más profesional y clara, sin saltos de papel innecesarios.
-                    </div>
-                </li>
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 mr-3 text-success flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <div>
-                        <strong class="text-lg">Control de Paginación:</strong> La lógica de conteo de renglones asegura que el layout de los exámenes (incluyendo las referencias variables) se adapte correctamente al tamaño de la página PDF.
-                    </div>
-                </li>
-            </ul>
-        </section>
+                <!-- FLECHA -->
+                <div class="arrow-down">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
+                </div>
 
-        <!-- Footer -->
-        <footer class="bg-gray-100 p-4 text-center text-sm text-gray-600 rounded-b-2xl">
-            Desarrollo de Sistemas de Laboratorio &copy; 2025 - Documentación de Lógica de Negocio
-        </footer>
+                <!-- PASO 4: OUTPUT -->
+                <div class="flow-box output">
+                    <div class="step-number" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">4</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #065f46; margin-bottom: 1.5rem;">
+                        📋 PDF GENERADO (Datos + Referencias fusionadas)
+                    </h3>
 
-    </div>
-</body>
-</html>
+                    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Página 1 (22 líneas)</h4>
+                        <div class="code-block">
+<span style="color: #a78bfa;">LABORATORIO CLÍNICO CENTRAL</span>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Paciente: Ana García López
+DNI: 76543210 | Edad: 35 años
+Fecha: 15/11/2024
+
+<span style="color: #fbbf24;">━━━ GLUCOSA ━━━</span>
+  Resultado: <span style="color: #10b981;">95 mg/
