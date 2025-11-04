@@ -49,6 +49,19 @@
             color: #4C51BF;
             stroke-width: 2;
         }
+        /* Estilos generales para las tablas de datos */
+        .data-table th {
+            @apply p-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-100;
+        }
+        .data-table td {
+            @apply p-3 whitespace-nowrap text-sm text-gray-800;
+        }
+        .data-table tr:nth-child(even) {
+            @apply bg-white;
+        }
+        .highlight-row {
+            @apply bg-accent/20 font-bold text-gray-900;
+        }
     </style>
 </head>
 <body class="p-4 md:p-10">
@@ -85,83 +98,210 @@
             </div>
         </section>
 
-        <!-- Sección 2: Detalle Técnico Paso a Paso -->
+        <!-- Sección 2: Detalle Técnico - Ejemplo Completo Avanzado -->
         <section class="p-6 md:p-10 bg-secondary/30">
-            <h2 class="text-3xl font-bold section-title mb-10 pb-3">2. Lógica de Paginación Digital Paso a Paso</h2>
+            <h2 class="text-3xl font-bold section-title mb-10 pb-3">2. Lógica Avanzada de Paginación y Consolidación (Ejemplo Completo)</h2>
 
             <!-- Contenedor de Pasos -->
             <div class="space-y-10">
 
-                <!-- PASO 1 & 2: Recolección y Almacenamiento -->
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- PASO 1 -->
-                    <div class="step-card bg-white p-6 rounded-xl">
-                        <svg class="book-icon mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <h4 class="text-xl font-bold text-gray-800 border-b pb-2 mb-2">Paso 1: Recolección de Exámenes</h4>
-                        <p class="text-gray-600">El paciente se somete a las pruebas.</p>
-                        <div class="mt-3 p-3 bg-secondary rounded-lg">
-                            <span class="font-mono text-sm font-medium text-primary">Ejemplo (Ana):</span> Glucosa, Hemograma, Orina.
+                <!-- GRUPO 1: CONFIGURACIÓN Y DATOS RAW -->
+                <div class="step-card bg-white p-6 rounded-xl shadow-2xl border-2 border-primary/50 space-y-8">
+                    <h3 class="text-2xl font-bold text-primary border-b pb-2 mb-4">A. Configuración de Datos Base (BD)</h3>
+
+                    <!-- 1. TABLA MAESTRA DE EXÁMENES (CONFIGURACIÓN) -->
+                    <div class="overflow-x-auto">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">1. TABLA MAESTRA DE EXÁMENES (CONFIGURACIÓN)</h4>
+                        <table class="data-table w-full border-collapse border border-gray-200 rounded-lg">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>NOMBRE_EXAMEN</th>
+                                    <th>LINEAS_OCUPA</th>
+                                    <th>CAMPOS_PACIENTE</th>
+                                    <th>CAMPOS_REFERENCIA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white">
+                                    <td>1</td>
+                                    <td>GLUCOSA</td>
+                                    <td>4</td>
+                                    <td>valor, unidad</td>
+                                    <td>"70-110 mg/dL"</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>HEMOGRAMA</td>
+                                    <td>8</td>
+                                    <td>hematocrito, hemoglobina, leucocitos</td>
+                                    <td>"Hto: 40-50%, Hb: 12-16 g/dL, Leuc: 4,000-11,000"</td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td>3</td>
+                                    <td>UROCULTIVO</td>
+                                    <td>25</td>
+                                    <td>leucocitos_campo, hematias_campo, bacterias, microorganismo</td>
+                                    <td>"Leuc: 0-4/campo, Hemat: 0-3/campo"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="mt-2 text-sm text-gray-600 italic">**Nota:** El campo <strong class="text-primary">LINEAS_OCUPA</strong> incluye el título del examen, las líneas base del resultado y las líneas para el(los) valor(es) de referencia DINÁMICOS.</p>
+                    </div>
+
+                    <!-- 2. TABLA DE PACIENTES & 3. TABLA DE ORDENES -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- 2. PACIENTES -->
+                        <div class="overflow-x-auto">
+                            <h4 class="font-bold text-lg mb-2 text-gray-700">2. TABLA DE PACIENTES</h4>
+                            <table class="data-table w-full border-collapse border border-gray-200">
+                                <thead>
+                                    <tr><th>ID</th><th>DNI</th><th>NOMBRE</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1</td><td>76543210</td><td>Ana García López</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 3. ORDENES -->
+                        <div class="overflow-x-auto">
+                            <h4 class="font-bold text-lg mb-2 text-gray-700">3. TABLA DE ÓRDENES (POR FECHA)</h4>
+                            <table class="data-table w-full border-collapse border border-gray-200">
+                                <thead>
+                                    <tr><th>ID</th><th>FECHA</th><th>EXÁMENES</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1001</td><td>2024-11-15</td><td>Glucosa, Hemograma, Urocultivo</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <!-- PASO 2 -->
-                    <div class="step-card bg-white p-6 rounded-xl">
-                         <svg class="book-icon mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V5H6.5A2.5 2.5 0 0 0 4 7.5v12z"></path></svg>
-                        <h4 class="text-xl font-bold text-gray-800 border-b pb-2 mb-2">Paso 2: Almacenamiento (Valores Crudos)</h4>
-                        <p class="text-gray-600">Solo los **valores de resultado** se guardan en la Base de Datos (BD). Los valores de referencia se gestionan aparte.</p>
-                        <pre class="mt-3 p-3 bg-gray-100 rounded-lg text-xs overflow-x-auto text-gray-700 border border-gray-300">
-// Datos almacenados en BD:
-Glucosa: 95
-Hemoglobina: 14 g/dL
-Leucocitos (Orina): 5-8
-                        </pre>
+
+                    <!-- 4. TABLA DE RESULTADOS (SOLO DATOS PACIENTE) -->
+                    <div class="overflow-x-auto">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">4. TABLA DE RESULTADOS (DATOS CRUDOS DEL PACIENTE)</h4>
+                        <table class="data-table w-full border-collapse border border-gray-200">
+                            <thead>
+                                <tr><th>ID_RES</th><th>ID_ORDEN</th><th>ID_EXAMEN</th><th>VALOR_1</th><th>VALOR_2</th><th>VALOR_3</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>5001</td><td>1001</td><td>1</td><td>"95"</td><td>"mg/dL"</td><td>NULL</td></tr>
+                                <tr><td>5002</td><td>1001</td><td>2</td><td>"42%"</td><td>"14 g/dL"</td><td>"6,500"</td></tr>
+                                <tr><td>5003</td><td>1001</td><td>3</td><td>"5-8/Campo"</td><td>"0-1/Campo"</td><td>"ESCASOS"</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="mt-2 text-sm text-gray-600 italic">**CRÍTICO:** Los valores de referencia NO están aquí. Se añaden en el paso de generación (runtime) consultando la Tabla Maestra (1).</p>
                     </div>
                 </div>
 
-                <!-- PASO 3: Generación de Formato Digital (CRÍTICO) -->
-                <div class="step-card bg-primary/10 p-6 rounded-xl border-2 border-primary shadow-2xl">
-                    <svg class="book-icon mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="color: #4C51BF;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    <h4 class="inline text-2xl font-bold text-primary border-b pb-2 mb-2">Paso 3: Enriquecimiento Dinámico y Lógica de Paginación</h4>
-                    <p class="mt-2 text-gray-700 font-medium">Al generar el documento PDF, el sistema **consulta y agrega los valores de referencia (múltiples renglones)**, definiendo el espacio real ocupado.</p>
-                    <div class="mt-4 p-4 bg-white rounded-lg text-sm border-l-4 border-primary font-medium">
-                        <p class="font-bold text-primary mb-2">EJEMPLO DE LA ESTRUCTURA EN PDF:</p>
-                        <ul class="space-y-2">
-                             <li class="border-b pb-1">
-                                ***GLUCOSA*** <span class="text-xs text-gray-500">(Ocupa 4 unidades/renglones)</span><br>
-                                Resultado: 95 mg/dL **(Ref: 70-110 mg/dL)**
-                            </li>
-                             <li class="border-b pb-1">
-                                ***HEMOGRAMA*** <span class="text-xs text-gray-500">(Ocupa 6 unidades/renglones)</span><br>
-                                Hematocrito: 42% **(Ref: 40-50%)**<br>
-                                Hemoglobina: 14 g/dL **(Ref: 12-16 g/dL)**
-                            </li>
-                            <li>
-                                ***ORINA*** <span class="text-xs text-gray-500">(Ocupa 5 unidades/renglones)</span><br>
-                                Leucocitos: 5-8 **(Ref: 0-4)**<br>
-                                Bacterias: Escasas
-                            </li>
-                        </ul>
+
+                <!-- GRUPO 2: LÓGICA DE PAGINACIÓN Y RESULTADO -->
+                <div class="step-card bg-accent/10 p-6 rounded-xl shadow-2xl border-2 border-accent space-y-8">
+                    <h3 class="text-2xl font-bold text-accent border-b pb-2 mb-4">B. Cálculo de Paginación y Output Final (Máx. 22 líneas por hoja digital)</h3>
+
+                    <!-- 5. CÁLCULO DE LÍNEAS Y HOJAS -->
+                    <div class="overflow-x-auto">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">5. CÁLCULO DE LÍNEAS Y HOJAS</h4>
+                        <table class="data-table w-full border-collapse border border-gray-200">
+                            <thead>
+                                <tr><th>ID_ORDEN</th><th>EXAMEN</th><th>LINEAS_EXAMEN</th><th>LINEAS_SEPARADOR</th><th>LINEAS_ACUMULADAS</th><th>HOJA_ASIGNADA</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1001</td><td>Glucosa</td><td>4</td><td>1</td><td>5</td><td>1</td></tr>
+                                <tr><td>1001</td><td>Hemograma</td><td>8</td><td>1</td><td>14</td><td>1</td></tr>
+                                <tr class="highlight-row">
+                                    <td>1001</td>
+                                    <td>Urocultivo</td>
+                                    <td>25</td>
+                                    <td>1</td>
+                                    <td>37</td>
+                                    <td>2 (¡Salto!)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-4 p-4 bg-white rounded-lg border-l-4 border-success">
+                            <p class="font-bold text-lg text-success">TOTAL LÍNEAS REQUERIDAS: 37</p>
+                            <p class="font-bold text-lg text-success">TOTAL HOJAS GENERADAS: 2 <span class="text-sm text-gray-600 italic">(37 líneas ÷ 22 líneas máx. por hoja = 1.68 → Se necesitan 2 hojas)</span></p>
+                        </div>
+                    </div>
+
+                    <!-- 6. INFORME GENERADO - HOJA 1 (Extracto) -->
+                    <div class="overflow-x-auto">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">6. INFORME GENERADO - HOJA 1 (Extracto del PDF)</h4>
+                        <pre class="bg-gray-800 text-secondary p-4 rounded-lg text-sm whitespace-pre-wrap">
+<span class="text-accent/80">LABORATORIO CLÍNICO CENTRAL (Título)</span>
+<span class="text-secondary">INFORME DE RESULTADOS (Subtítulo)</span>
+-----------------------------------
+Paciente: Ana García López (Dato paciente)
+DNI: 76543210 - Edad: 35 años (Dato paciente)
+Fecha: 15/11/2024 (Dato paciente)
+(Líneas de cabecera y datos de paciente consumen ~8 líneas)
+
+<span class="text-accent">--- GLUCOSA ---</span> (4 líneas)
+  Resultado: 95 mg/dL (Valor paciente)
+  Valor referencia: 70-110 mg/dL (Valor referencia)
+(Consumo acumulado: ~12 líneas)
+
+<span class="text-accent">--- HEMOGRAMA ---</span> (8 líneas)
+  Hematocrito: 42% (Valor paciente)
+  Referencia: 40-50% (Valor referencia)
+  Hemoglobina: 14 g/dL (Valor paciente)
+  Referencia: 12-16 g/dL (Valor referencia)
+  Leucocitos: 6,500 (Valor paciente)
+  Referencia: 4,000-11,000 (Valor referencia)
+(Consumo acumulado: ~21 líneas. El siguiente examen fuerza salto de página.)
+
+<span class="text-danger">*** FIN DE HOJA 1 (Línea 22) ***</span>
+</pre>
+                    </div>
+
+                    <!-- 7. INFORME GENERADO - HOJA 2 (Extracto) -->
+                    <div class="overflow-x-auto">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">7. INFORME GENERADO - HOJA 2 (Extracto del PDF)</h4>
+                        <pre class="bg-gray-800 text-secondary p-4 rounded-lg text-sm whitespace-pre-wrap">
+<span class="text-accent/80">LABORATORIO CLÍNICO CENTRAL (Título, repite header)</span>
+<span class="text-secondary">Paciente: Ana García López (continuación) (Dato paciente)</span>
+-----------------------------------
+(Líneas de cabecera de la nueva página consumen ~3 líneas)
+
+<span class="text-accent">--- UROCULTIVO ---</span> (25 líneas, empieza aquí)
+  Leucocitos: 5-8/Campo (Valor paciente)
+  Referencia: 0-4/Campo (Valor referencia)
+  Hematías: 0-1/Campo (Valor paciente)
+  Referencia: 0-3/Campo (Valor referencia)
+  Bacterias: ESCASOS (Valor paciente)
+  Recuento: >100 UFC/mL (Valor paciente)
+  Microorganismo: Staphylococcus (Valor paciente)
+  Resultado: POSITIVO (Valor paciente)
+(El resto del examen UROCULTIVO y el footer de firma ocupan las líneas restantes de la Hoja 2)
+
+FIRMA: ___________________ (Firma)
+Dr. Carlos Rodríguez (Nombre médico)
+CMP: 12345 (Colegiatura)
+</pre>
+                    </div>
+
+                    <!-- 8. RESUMEN EJECUTIVO -->
+                    <div class="overflow-x-auto">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">8. RESUMEN EJECUTIVO (Eficacia de Consolidación)</h4>
+                        <table class="data-table w-full border-collapse border border-gray-200">
+                            <thead>
+                                <tr><th>CONCEPTO</th><th>VALOR</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Paciente</td><td>Ana García López</td></tr>
+                                <tr><td>Fecha</td><td>15/11/2024</td></tr>
+                                <tr class="bg-primary/10 font-semibold text-primary"><td>Total exámenes</td><td>3</td></tr>
+                                <tr class="bg-primary/10 font-semibold text-primary"><td>Total líneas ocupadas</td><td>37</td></tr>
+                                <tr class="bg-primary/10 font-semibold text-primary"><td>Total hojas generadas</td><td>2</td></tr>
+                                <tr><td>Espacio total disponible (2 hojas * 22 líneas)</td><td>44 líneas</td></tr>
+                                <tr><td>Espacio utilizado</td><td>84% (37/44 líneas)</td></tr>
+                                <tr><td>Espacio sobrante</td><td>7 líneas</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <!-- PASO 4 & 5: Cálculo y Verificación de la Página Digital -->
-                <div class="step-card bg-accent/10 p-6 rounded-xl border-2 border-accent">
-                     <svg class="book-icon mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="color: #F6AD55;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    <h4 class="inline text-2xl font-bold text-accent border-b pb-2 mb-2">Paso 4 & 5: Cálculo Crítico de Espacio (Renglones)</h4>
-                    <p class="mt-2 text-gray-700">Se suma el espacio total requerido, incluyendo el espacio adicional que ocupan las **múltiples líneas de referencia** y los separadores.</p>
-                    <div class="mt-4 p-4 bg-white rounded-lg text-base border-l-4 border-gray-400 font-mono">
-                        <p class="font-bold mb-2">CÁLCULO DE REQUERIMIENTO:</p>
-                        <ul class="space-y-1">
-                            <li>Glucosa: 4 Renglones</li>
-                            <li>Hemograma: 6 Renglones (Múltiples Refs)</li>
-                            <li>Orina: 5 Renglones</li>
-                            <li>Separadores (Entre Exámenes): 2 Renglones</li>
-                            <li class="font-bold text-lg border-t pt-2 mt-2 border-gray-300">TOTAL REQUERIDO: 17 Renglones</li>
-                        </ul>
-                        <p class="mt-4 text-lg font-extrabold text-success">VERIFICACIÓN (Página Digital Máx. 22 Renglones):</p>
-                        <p class="text-xl font-extrabold text-success">17 renglones ≤ 22 renglones → <span class="text-primary">✅ CONSOLIDADO EN 1 PÁGINA</span></p>
-                    </div>
-                    <p class="mt-3 text-sm text-gray-600 italic">**NOTA CRÍTICA:** Un cálculo incorrecto resultaría en que el informe sea cortado o en que se genere una segunda página innecesaria, perdiendo el objetivo de consolidación.</p>
-                </div>
             </div>
         </section>
 
