@@ -1,569 +1,758 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page import="java.util.*" %>
+<%
+    // Inicializar la lista de propiedades en la sesión si no existe
+    List<Map<String, String>> propiedades = (List<Map<String, String>>) session.getAttribute("propiedades");
+    if (propiedades == null) {
+        propiedades = new ArrayList<>();
+        
+        // Agregar algunas propiedades por defecto
+        Map<String, String> prop1 = new HashMap<>();
+        prop1.put("id", "PROP001");
+        prop1.put("titulo", "Residencia Vista Verde");
+        prop1.put("precio", "120000");
+        prop1.put("ubicacion", "Surco, Lima");
+        prop1.put("imagen", "https://media.giphy.com/media/l0HlGSD6Qbe8yhU2A/giphy.gif");
+        prop1.put("dormitorios", "3");
+        prop1.put("banios", "2");
+        prop1.put("area", "180");
+        prop1.put("descripcion", "Hermosa residencia moderna con amplios espacios verdes y acabados de lujo.");
+        propiedades.add(prop1);
+        
+        Map<String, String> prop2 = new HashMap<>();
+        prop2.put("id", "PROP002");
+        prop2.put("titulo", "Apartamento Miraflores");
+        prop2.put("precio", "95000");
+        prop2.put("ubicacion", "Miraflores, Lima");
+        prop2.put("imagen", "https://media.giphy.com/media/3o7aD2d7hy9ktXNDP2/giphy.gif");
+        prop2.put("dormitorios", "2");
+        prop2.put("banios", "2");
+        prop2.put("area", "110");
+        prop2.put("descripcion", "Elegante apartamento en zona exclusiva de Miraflores con vista al mar.");
+        propiedades.add(prop2);
+        
+        session.setAttribute("propiedades", propiedades);
+    }
+    
+    // Procesar el formulario de agregar propiedad
+    if ("POST".equalsIgnoreCase(request.getMethod()) && request.getParameter("nuevoTitulo") != null) {
+        String nuevoId = "PROP" + String.format("%03d", propiedades.size() + 1);
+        
+        Map<String, String> nuevaPropiedad = new HashMap<>();
+        nuevaPropiedad.put("id", nuevoId);
+        nuevaPropiedad.put("titulo", request.getParameter("nuevoTitulo"));
+        nuevaPropiedad.put("precio", request.getParameter("nuevoPrecio"));
+        nuevaPropiedad.put("ubicacion", request.getParameter("nuevoUbicacion"));
+        nuevaPropiedad.put("imagen", request.getParameter("nuevoGif"));
+        nuevaPropiedad.put("dormitorios", request.getParameter("nuevoDormitorios"));
+        nuevaPropiedad.put("banios", request.getParameter("nuevoBanios"));
+        nuevaPropiedad.put("area", request.getParameter("nuevoArea"));
+        nuevaPropiedad.put("descripcion", request.getParameter("nuevoDescripcion"));
+        
+        propiedades.add(nuevaPropiedad);
+        session.setAttribute("propiedades", propiedades);
+        
+        // Redirigir para evitar reenvío del formulario
+        response.sendRedirect("Casa.jsp");
+        return;
+    }
+    
+    // Procesar datos del formulario de venta
+    String nombre = request.getParameter("nombreCliente");
+    String propiedadId = request.getParameter("propiedadId");
+    boolean mostrarFormularioVenta = (nombre == null || propiedadId == null);
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informe Consolidado de Laboratorio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Inmobiliaria Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ====== VARIABLES Y RESET ====== */
+        :root {
+            --primary-color: #2A6B38;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
+            --accent-color: #D4AF37;
+            --accent-light: #FFD700;
+            --text-dark: #2C3E50;
+            --text-light: #7F8C8D;
+            --background-light: #F9F9F9;
+            --white: #FFFFFF;
+            --gray-light: #ECF0F1;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        /* ====== ESTILOS GENERALES ====== */
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 2rem 1rem;
+            padding: 20px;
         }
 
         .container {
-            max-width: 1400px;
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 4rem 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        .section-card {
-            background: white;
-            padding: 3rem;
-            margin: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
-
-        .problem-solution {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .card-danger {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            padding: 2rem;
-            border-radius: 16px;
-            border-left: 4px solid #ef4444;
-            position: relative;
-        }
-
-        .card-success {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            padding: 2rem;
-            border-radius: 16px;
-            border-left: 4px solid #10b981;
-            position: relative;
-        }
-
-        .data-table-container {
-            overflow-x: auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin: 1.5rem 0;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-        }
-
-        .data-table thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .data-table th {
-            padding: 1rem;
-            text-align: left;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .data-table td {
-            padding: 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            font-size: 0.875rem;
-            color: #374151;
-        }
-
-        .data-table tbody tr:hover {
-            background: #f9fafb;
-        }
-
-        .data-table .highlight-row {
-            background: linear-gradient(90deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
-            font-weight: 600;
-        }
-
-        .flow-box {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: relative;
-            border: 2px solid #e5e7eb;
-        }
-
-        .flow-box.database {
-            border-color: #3b82f6;
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        }
-
-        .flow-box.template {
-            border-color: #f59e0b;
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-        }
-
-        .flow-box.output {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        }
-
-        .arrow-down {
-            display: flex;
-            justify-content: center;
-            margin: 1rem 0;
-        }
-
-        .arrow-down svg {
-            color: #667eea;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin: 0.25rem;
-        }
-
-        .badge-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .code-block {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 1.5rem;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.875rem;
-            line-height: 1.8;
-            overflow-x: auto;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .warning-box {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border-left: 4px solid #f59e0b;
-            margin: 1.5rem 0;
-        }
-
-        .critical-box {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border-left: 4px solid #ef4444;
-            margin: 1.5rem 0;
-        }
-
-        .info-box {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border-left: 4px solid #3b82f6;
-            margin: 1.5rem 0;
-        }
-
-        .metric-card {
-            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-            padding: 2rem;
-            border-radius: 16px;
+        /* ====== HEADER ====== */
+        .app-header {
             text-align: center;
-            border: 2px solid #a78bfa;
+            margin-bottom: 40px;
+            padding: 20px;
+            position: relative;
         }
 
-        .metric-value {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .app-header::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--accent-color);
+            margin: 15px auto;
+            border-radius: 2px;
         }
 
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 50%;
+        .app-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-size: 42px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .app-subtitle {
+            color: var(--text-light);
+            font-size: 18px;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ====== TARJETAS DE PROPIEDADES ====== */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .property-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .property-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .property-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent-color);
+            color: var(--white);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .property-image-container {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .property-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .property-card:hover .property-image {
+            transform: scale(1.05);
+        }
+
+        .property-details {
+            padding: 25px;
+        }
+
+        .property-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .property-location {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 15px;
         }
 
+        .property-location i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .property-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .property-features {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .feature i {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .feature-value {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .feature-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .btn-buy {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-buy:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 107, 56, 0.3);
+        }
+
+        /* ====== FORMULARIO DE AGREGAR PROPIEDAD ====== */
+        .form-section {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 1px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: #FAFAFA;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(42, 107, 56, 0.1);
+            background-color: white;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 107, 56, 0.3);
+        }
+
+        /* ====== RESULTADOS DE VENTA ====== */
+        .result-container {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .result-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .result-subtitle {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .result-item {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .payment-plan {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .payment-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            font-weight: 500;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: var(--transition);
+            padding: 10px 20px;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+        }
+
+        .back-link:hover {
+            color: var(--white);
+            background-color: var(--primary-color);
+        }
+
+        .back-link i {
+            margin-right: 8px;
+        }
+
+        /* ====== ANIMACIONES ====== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* ====== RESPONSIVE ====== */
         @media (max-width: 768px) {
-            .section-card {
-                padding: 1.5rem;
-                margin: 1rem;
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-section,
+            .result-container {
+                padding: 25px 20px;
+            }
+            
+            .app-title {
+                font-size: 32px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <div class="glass-card">
-            <!-- Hero Section -->
-            <div class="hero-section">
-                <div style="position: relative; z-index: 1; text-align: center;">
-                    <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 0.5rem 1.5rem; border-radius: 20px; margin-bottom: 1rem;">
-                        <span style="color: white; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.05em;">SISTEMA DE LABORATORIO CLÍNICO</span>
-                    </div>
-                    <h1 style="font-size: 3.5rem; font-weight: 900; color: white; margin-bottom: 1rem; line-height: 1.2;">
-                        Informe Consolidado Digital
-                    </h1>
-                    <p style="font-size: 1.25rem; color: rgba(255,255,255,0.9); max-width: 700px; margin: 0 auto;">
-                        Lógica de Paginación con Referencias Dinámicas en Plantilla
-                    </p>
+        <div class="app-header fade-in">
+            <h1 class="app-title">Inmobiliaria Premium</h1>
+            <p class="app-subtitle">Descubre propiedades exclusivas y encuentra el hogar de tus sueños</p>
+        </div>
+
+        <% if (!mostrarFormularioVenta) { 
+            // Buscar la propiedad seleccionada
+            Map<String, String> propiedadSeleccionada = null;
+            for (Map<String, String> prop : propiedades) {
+                if (prop.get("id").equals(propiedadId)) {
+                    propiedadSeleccionada = prop;
+                    break;
+                }
+            }
+            
+            if (propiedadSeleccionada != null) {
+                int precio = Integer.parseInt(propiedadSeleccionada.get("precio"));
+                Integer cuotaInicial = 0, cuotaMensual = 0;
+                int plazo = 0;
+                
+                if (precio > 0 && precio <= 80000) {
+                    cuotaInicial = (precio * 30) / 100;
+                    cuotaMensual = (precio - cuotaInicial) / 36;
+                    plazo = 36;
+                } else if (precio > 80000 && precio <= 140000) {
+                    cuotaInicial = (precio * 25) / 100;
+                    cuotaMensual = (precio - cuotaInicial) / 48;
+                    plazo = 48;
+                } else if (precio > 140000) {
+                    cuotaInicial = (precio * 20) / 100;
+                    cuotaMensual = (precio - cuotaInicial) / 60;
+                    plazo = 60;
+                }
+        %>
+        
+        <div class="result-container fade-in">
+            <h2 class="result-title">¡Felicidades por tu nueva propiedad!</h2>
+            <p class="result-subtitle">Hemos procesado tu solicitud de financiamiento</p>
+            
+            <div class="result-card">
+                <div class="property-image-container">
+                    <img src="<%= propiedadSeleccionada.get("imagen") %>" alt="<%= propiedadSeleccionada.get("titulo") %>" class="property-image">
+                </div>
+                <h3 style="margin: 20px 0 10px; font-size: 22px;"><%= propiedadSeleccionada.get("titulo") %></h3>
+                <p style="color: var(--text-light); margin-bottom: 20px;"><%= propiedadSeleccionada.get("descripcion") %></p>
+            </div>
+            
+            <div class="result-details">
+                <div class="result-item">
+                    <div class="result-label">Cliente</div>
+                    <div class="result-value"><%= nombre %></div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Precio de la propiedad</div>
+                    <div class="result-value">S/. <%= precio %></div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Cuota Inicial</div>
+                    <div class="result-value">S/. <%= cuotaInicial %></div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Cuota Mensual</div>
+                    <div class="result-value">S/. <%= cuotaMensual %></div>
                 </div>
             </div>
-
-            <!-- Sección 1: Problema y Solución -->
-            <div class="section-card">
-                <h2 style="font-size: 2rem; font-weight: 800; color: #1f2937; margin-bottom: 1rem;">
-                    Situación Actual y Objetivo Principal
-                </h2>
-                <p style="color: #6b7280; font-size: 1.125rem; margin-bottom: 2rem;">
-                    Transformando la gestión documental del laboratorio
-                </p>
-
-                <div class="problem-solution">
-                    <div class="card-danger">
-                        <div style="width: 3rem; height: 3rem; background: rgba(239, 68, 68, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-                            <svg style="width: 1.5rem; height: 1.5rem; color: #dc2626;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M18 6L6 18M6 6l12 12"></path>
-                            </svg>
-                        </div>
-                        <h3 style="font-size: 1.5rem; font-weight: 700; color: #dc2626; margin-bottom: 1rem;">
-                            Problema Actual
-                        </h3>
-                        <p style="color: #7f1d1d; line-height: 1.6;">
-                            Cada examen genera un PDF separado, resultando en <strong>múltiples archivos desorganizados</strong> para un mismo encuentro clínico.
-                        </p>
+            
+            <div class="payment-plan">
+                <h3 class="payment-title">Plan de Pagos</h3>
+                <p style="margin-bottom: 15px;">Has adquirido <strong><%= propiedadSeleccionada.get("titulo") %></strong> con un precio de <strong>S/. <%= precio %></strong>.</p>
+                <p style="margin-bottom: 15px;">Tu cuota inicial es de <strong>S/. <%= cuotaInicial %></strong> y pagarás <strong><%= plazo %> cuotas mensuales</strong> de <strong>S/. <%= cuotaMensual %></strong>.</p>
+                <p style="font-style: italic; color: var(--text-light);">¡Gracias por confiar en Inmobiliaria Premium!</p>
+            </div>
+            
+            <a href="Casa.jsp" class="back-link"><i class="fas fa-arrow-left"></i> Volver al listado de propiedades</a>
+        </div>
+        
+        <% } else { %>
+            <div class="result-container fade-in">
+                <h2 class="result-title">Error</h2>
+                <p>La propiedad seleccionada no existe.</p>
+                <a href="Casa.jsp" class="back-link"><i class="fas fa-arrow-left"></i> Volver al listado de propiedades</a>
+            </div>
+        <% } %>
+        
+        <% } else { %>
+        
+        <!-- Lista de propiedades disponibles -->
+        <div class="properties-grid">
+            <% for (int i = 0; i < propiedades.size(); i++) { 
+                Map<String, String> propiedad = propiedades.get(i);
+            %>
+            <div class="property-card fade-in">
+                <% if (i == propiedades.size() - 1) { %>
+                <div class="property-badge">Nuevo</div>
+                <% } %>
+                <div class="property-image-container">
+                    <img src="<%= propiedad.get("imagen") %>" alt="<%= propiedad.get("titulo") %>" class="property-image">
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title"><%= propiedad.get("titulo") %></h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i> <%= propiedad.get("ubicacion") %>
                     </div>
-
-                    <div class="card-success">
-                        <div style="width: 3rem; height: 3rem; background: rgba(16, 185, 129, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-                            <svg style="width: 1.5rem; height: 1.5rem; color: #059669;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
+                    <div class="property-price">S/. <%= propiedad.get("precio") %></div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span class="feature-value"><%= propiedad.get("dormitorios") %></span>
+                            <span class="feature-label">Dormitorios</span>
                         </div>
-                        <h3 style="font-size: 1.5rem; font-weight: 700; color: #059669; margin-bottom: 1rem;">
-                            Solución Implementada
-                        </h3>
-                        <p style="color: #14532d; line-height: 1.6;">
-                            Consolidación de todos los resultados en <strong>un único PDF</strong> con paginación inteligente que considera el espacio de las plantillas de referencia.
-                        </p>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span class="feature-value"><%= propiedad.get("banios") %></span>
+                            <span class="feature-label">Baños</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-vector-square"></i>
+                            <span class="feature-value"><%= propiedad.get("area") %>m²</span>
+                            <span class="feature-label">Área</span>
+                        </div>
                     </div>
+                    <form action="Casa.jsp" method="get" style="margin-top: 15px;">
+                        <input type="hidden" name="propiedadId" value="<%= propiedad.get("id") %>">
+                        <input type="hidden" name="propiedadNombre" value="<%= propiedad.get("titulo") %>">
+                        <input type="hidden" name="propiedadPrecio" value="<%= propiedad.get("precio") %>">
+                        <input type="hidden" name="propiedadImagen" value="<%= propiedad.get("imagen") %>">
+                        <div class="form-group">
+                            <input type="text" name="nombreCliente" placeholder="Ingresa tu nombre" required style="padding: 12px; margin-bottom: 10px;">
+                        </div>
+                        <button type="submit" class="btn-buy">
+                            <i class="fas fa-home"></i> Comprar esta propiedad
+                        </button>
+                    </form>
                 </div>
             </div>
-
-            <!-- Sección 2: Flujo Completo -->
-            <div class="section-card" style="background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%);">
-                <h2 style="font-size: 2rem; font-weight: 800; color: #1f2937; margin-bottom: 0.5rem;">
-                    Flujo Completo del Sistema
-                </h2>
-                <p style="color: #6b7280; margin-bottom: 3rem; font-size: 1.125rem;">De la base de datos al PDF consolidado</p>
-
-                <!-- PASO 1: BASE DE DATOS -->
-                <div class="flow-box database">
-                    <div class="step-number">1</div>
-                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #1e40af; margin-bottom: 1.5rem;">
-                        📊 DATOS EN BASE DE DATOS (Solo datos del paciente)
-                    </h3>
-
-                    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Tabla Maestra de Exámenes</h4>
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Examen</th>
-                                        <th>Líneas Totales*</th>
-                                        <th>Campos de Datos</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><span class="badge badge-primary">1</span></td>
-                                        <td><strong>GLUCOSA</strong></td>
-                                        <td>4 líneas</td>
-                                        <td>valor, unidad</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge badge-primary">2</span></td>
-                                        <td><strong>HEMOGRAMA</strong></td>
-                                        <td>8 líneas</td>
-                                        <td>hematocrito, hemoglobina, leucocitos</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge badge-primary">3</span></td>
-                                        <td><strong>UROCULTIVO</strong></td>
-                                        <td>25 líneas</td>
-                                        <td>leucocitos, hematías, bacterias, microorganismo</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="warning-box">
-                            <p style="color: #78350f; line-height: 1.6;">
-                                <strong>*Líneas Totales incluye:</strong> Título del examen + Datos del paciente + <strong>ESPACIO RESERVADO para valores de referencia</strong> (aunque NO se guardan en BD)
-                            </p>
+            <% } %>
+        </div>
+        
+        <!-- Formulario para agregar nuevas propiedades -->
+        <div class="form-section fade-in">
+            <h2 class="section-title">Agregar Nueva Propiedad</h2>
+            <form action="Casa.jsp" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nuevoTitulo"><i class="fas fa-heading"></i> Título de la propiedad</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-pencil-alt"></i>
+                            <input type="text" id="nuevoTitulo" name="nuevoTitulo" placeholder="Ej: Casa Moderna en Surco" required>
                         </div>
                     </div>
-
-                    <div style="background: white; padding: 1.5rem; border-radius: 8px;">
-                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Tabla de Resultados (Solo valores del paciente)</h4>
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr><th>ID</th><th>Orden</th><th>Examen</th><th>Valor 1</th><th>Valor 2</th><th>Valor 3</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>5001</td><td>1001</td><td>GLUCOSA</td><td>95</td><td>mg/dL</td><td>—</td></tr>
-                                    <tr><td>5002</td><td>1001</td><td>HEMOGRAMA</td><td>42%</td><td>14 g/dL</td><td>6,500</td></tr>
-                                    <tr><td>5003</td><td>1001</td><td>UROCULTIVO</td><td>5-8/Campo</td><td>0-1/Campo</td><td>ESCASOS</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="critical-box" style="margin-top: 1.5rem;">
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <svg style="width: 1.5rem; height: 1.5rem; color: #dc2626; flex-shrink: 0; margin-top: 0.25rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                            <div>
-                                <h5 style="font-weight: 700; color: #7f1d1d; margin-bottom: 0.5rem; font-size: 1.125rem;">PUNTO CRÍTICO</h5>
-                                <p style="color: #7f1d1d; line-height: 1.7; font-weight: 500;">
-                                    Los <strong>valores de referencia NO se guardan en la base de datos</strong>. Solo se almacenan los datos del paciente (95, 42%, 6,500, etc.)
-                                </p>
-                            </div>
+                    
+                    <div class="form-group">
+                        <label for="nuevoPrecio"><i class="fas fa-tag"></i> Precio (S/.)</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                            <input type="number" id="nuevoPrecio" name="nuevoPrecio" placeholder="Ej: 120000" min="1" required>
                         </div>
                     </div>
                 </div>
-
-                <!-- FLECHA -->
-                <div class="arrow-down">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <polyline points="19 12 12 19 5 12"></polyline>
-                    </svg>
-                </div>
-
-                <!-- PASO 2: PLANTILLA -->
-                <div class="flow-box template">
-                    <div class="step-number" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">2</div>
-                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #92400e; margin-bottom: 1.5rem;">
-                        📄 PLANTILLA DE IMPRESIÓN (Con referencias hardcodeadas)
-                    </h3>
-
-                    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Ejemplo: Plantilla de GLUCOSA (4 líneas)</h4>
-                        <div class="code-block">
-<span style="color: #fbbf24;">━━━ GLUCOSA ━━━</span>                           ← Línea 1: Título
-  Resultado: <span style="color: #10b981;">[VALOR_PACIENTE]</span> <span style="color: #10b981;">[UNIDAD]</span>   ← Línea 2: Dato de BD
-  <span style="color: #f97316;">Valor de Referencia: 70-110 mg/dL</span>    ← Línea 3: <strong>HARDCODEADO</strong>
-                                             ← Línea 4: Espacio
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nuevoUbicacion"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-location-arrow"></i>
+                            <input type="text" id="nuevoUbicacion" name="nuevoUbicacion" placeholder="Ej: Miraflores, Lima" required>
                         </div>
                     </div>
-
-                    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Ejemplo: Plantilla de HEMOGRAMA (8 líneas)</h4>
-                        <div class="code-block">
-<span style="color: #fbbf24;">━━━ HEMOGRAMA ━━━</span>                        ← Línea 1: Título
-  Hematocrito: <span style="color: #10b981;">[VALOR_1]</span>                ← Línea 2: Dato de BD
-  <span style="color: #f97316;">Referencia: 40-50%</span>                    ← Línea 3: <strong>HARDCODEADO</strong>
-  Hemoglobina: <span style="color: #10b981;">[VALOR_2]</span>                ← Línea 4: Dato de BD
-  <span style="color: #f97316;">Referencia: 12-16 g/dL</span>                ← Línea 5: <strong>HARDCODEADO</strong>
-  Leucocitos: <span style="color: #10b981;">[VALOR_3]</span>                 ← Línea 6: Dato de BD
-  <span style="color: #f97316;">Referencia: 4,000-11,000</span>              ← Línea 7: <strong>HARDCODEADO</strong>
-                                             ← Línea 8: Espacio
-                        </div>
-                    </div>
-
-                    <div class="info-box">
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <svg style="width: 1.5rem; height: 1.5rem; color: #1e40af; flex-shrink: 0; margin-top: 0.25rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                            </svg>
-                            <div>
-                                <h5 style="font-weight: 700; color: #1e3a8a; margin-bottom: 0.5rem;">¿Por qué contar las líneas de referencia?</h5>
-                                <p style="color: #1e3a8a; line-height: 1.7;">
-                                    Las referencias ocupan <strong>ESPACIO FÍSICO en el PDF</strong>. Si no las contamos en la lógica de paginación, los exámenes se solaparían o se cortarían entre páginas.
-                                </p>
-                            </div>
+                    
+                    <div class="form-group">
+                        <label for="nuevoGif"><i class="fas fa-link"></i> URL del GIF</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-image"></i>
+                            <input type="url" id="nuevoGif" name="nuevoGif" placeholder="https://ejemplo.com/casa.gif" required>
                         </div>
                     </div>
                 </div>
-
-                <!-- FLECHA -->
-                <div class="arrow-down">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <polyline points="19 12 12 19 5 12"></polyline>
-                    </svg>
-                </div>
-
-                <!-- PASO 3: CÁLCULO -->
-                <div class="flow-box" style="border-color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);">
-                    <div class="step-number" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">3</div>
-                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #6b21a8; margin-bottom: 1.5rem;">
-                        🧮 CÁLCULO DE PAGINACIÓN (Máx. 22 líneas/página)
-                    </h3>
-
-                    <div style="background: white; padding: 1.5rem; border-radius: 8px;">
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr><th>Examen</th><th>Líneas Total</th><th>Separador</th><th>Acumulado</th><th>Página</th><th>Lógica</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Glucosa</strong></td>
-                                        <td>4</td>
-                                        <td>1</td>
-                                        <td>5</td>
-                                        <td>1</td>
-                                        <td style="font-size: 0.75rem; color: #6b7280;">5 ≤ 22 ✓ Cabe</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Hemograma</strong></td>
-                                        <td>8</td>
-                                        <td>1</td>
-                                        <td>14</td>
-                                        <td>1</td>
-                                        <td style="font-size: 0.75rem; color: #6b7280;">14 ≤ 22 ✓ Cabe</td>
-                                    </tr>
-                                    <tr class="highlight-row">
-                                        <td><strong>Urocultivo</strong></td>
-                                        <td>25</td>
-                                        <td>1</td>
-                                        <td>40</td>
-                                        <td>2</td>
-                                        <td style="font-size: 0.75rem; color: #dc2626;"><strong>40 > 22 ✗ Nueva página</strong></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nuevoDormitorios"><i class="fas fa-bed"></i> Dormitorios</label>
+                        <select id="nuevoDormitorios" name="nuevoDormitorios" required>
+                            <option value="">Seleccionar</option>
+                            <option value="1">1 dormitorio</option>
+                            <option value="2">2 dormitorios</option>
+                            <option value="3">3 dormitorios</option>
+                            <option value="4">4 dormitorios</option>
+                            <option value="5+">5+ dormitorios</option>
+                        </select>
                     </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 2rem;">
-                        <div class="metric-card">
-                            <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Líneas Totales</div>
-                            <div class="metric-value">37</div>
-                        </div>
-                        <div class="metric-card">
-                            <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Páginas</div>
-                            <div class="metric-value">2</div>
-                        </div>
-                        <div class="metric-card">
-                            <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Eficiencia</div>
-                            <div class="metric-value">84%</div>
+                    
+                    <div class="form-group">
+                        <label for="nuevoBanios"><i class="fas fa-bath"></i> Baños</label>
+                        <select id="nuevoBanios" name="nuevoBanios" required>
+                            <option value="">Seleccionar</option>
+                            <option value="1">1 baño</option>
+                            <option value="2">2 baños</option>
+                            <option value="3">3 baños</option>
+                            <option value="4+">4+ baños</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nuevoArea"><i class="fas fa-vector-square"></i> Área (m²)</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-ruler-combined"></i>
+                            <input type="number" id="nuevoArea" name="nuevoArea" placeholder="Ej: 120" min="1" required>
                         </div>
                     </div>
                 </div>
-
-                <!-- FLECHA -->
-                <div class="arrow-down">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <polyline points="19 12 12 19 5 12"></polyline>
-                    </svg>
+                
+                <div class="form-group">
+                    <label for="nuevoDescripcion"><i class="fas fa-align-left"></i> Descripción</label>
+                    <textarea id="nuevoDescripcion" name="nuevoDescripcion" placeholder="Describe la propiedad..." required></textarea>
                 </div>
-
-                <!-- PASO 4: OUTPUT -->
-                <div class="flow-box output">
-                    <div class="step-number" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">4</div>
-                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #065f46; margin-bottom: 1.5rem;">
-                        📋 PDF GENERADO (Datos + Referencias fusionadas)
-                    </h3>
-
-                    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                        <h4 style="font-weight: 600; color: #374151; margin-bottom: 1rem;">Página 1 (22 líneas)</h4>
-                        <div class="code-block">
-<span style="color: #a78bfa;">LABORATORIO CLÍNICO CENTRAL</span>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Paciente: Ana García López
-DNI: 76543210 | Edad: 35 años
-Fecha: 15/11/2024
-
-<span style="color: #fbbf24;">━━━ GLUCOSA ━━━</span>
-  Resultado: <span style="color: #10b981;">95 mg/
+                
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-plus-circle"></i> Agregar Propiedad
+                </button>
+            </form>
+        </div>
+        
+        <% } %>
+    </div>
+</body>
+</html>
